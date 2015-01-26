@@ -193,7 +193,7 @@ void DeleteEnd_DL(struct Node **list)
     }
     else
         *list = NULL;
-	free(temp);
+    free(temp);
 }
 
 void DeleteAny_DL(struct Node **list, int key)
