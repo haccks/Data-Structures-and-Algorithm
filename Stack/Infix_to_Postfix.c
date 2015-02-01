@@ -26,7 +26,7 @@ void Print_post_exp(char *exp);
 bool CheckParen(struct Stack*);
 bool IsOperator(char );
 bool CheckOperator(char, char);
-void PrintMessage(void);
+void HandleError(void);
 
 int main(void)
 {
@@ -101,6 +101,7 @@ int InStack_Priority(char x)
         return 0;
     if(isalnum(x))
         return 8;
+    return -1;
 }
 
 int InComing_Priority(char x)
@@ -117,12 +118,15 @@ int InComing_Priority(char x)
         return 0;
     if(isalnum(x))
         return 7;
+    return -1;
 }
 
 
 void Print_post_exp(char *exp)
 {
     printf("The postfix expression is: ");
+    if(exp[0] == '\0')
+            printf("Empty!\n");
     while(*exp)
         printf("%c ", *exp++);
     printf("\n\n");
@@ -133,8 +137,7 @@ bool CheckParen(struct Stack *stack)
     int temp;
     if((temp = getchar()) != '\n' && stack->TOP == -1)
     {
-        PrintMessage();
-        while(getchar() != '\n');
+        HandleError();
         return 0;
     }
     else
@@ -155,19 +158,20 @@ bool IsOperator(char c)
 
 bool CheckOperator(char previous, char current)
 {
-    if(IsOperator(previous) && IsOperator(current) || current == ')' && IsOperator(previous))
+    if((IsOperator(previous) && IsOperator(current)) || (current == ')' && IsOperator(previous)))
     {
-        PrintMessage();
-        while(getchar() != '\n');
+        HandleError();
         return 0;
     }
     return 1;
 }
 
-void PrintMessage(void)
+void HandleError(void)
 {
-    printf("Wrong expression. Either:\n 1. Some extra arithmetic operators are there or\n");
-    printf(" 2. there may be unmatched parenthesis!\n");
+    while(getchar() != '\n');
+    printf("Wrong expression! Either:\n 1. Some extra arithmetic operators are there or\n");
+    printf(" 2. there may be unmatched parenthesis or\n");
+    printf(" 3. there may be some unexpected symbol.\n");
 }
 
 
@@ -199,7 +203,11 @@ void InfixToPostfix(struct Stack *stack, char *exp)
                 x = Pop(stack);
             }
             if(!CheckParen(stack))
+            {
+                memset(exp, '\0', stack->StackSize * 10);
                 return;
+            }
+
         }
         /************************************************************************************
          * A symbol will be pushed onto the stack if its InComing _Priority is greater than *
@@ -207,6 +215,12 @@ void InfixToPostfix(struct Stack *stack, char *exp)
          ************************************************************************************/
         else if(InStack_Priority(x) >= InComing_Priority(item))
         {
+            if(InComing_Priority(item) == -1)
+            {
+                HandleError();
+                memset(exp, '\0', stack->StackSize * 10);
+                return;
+            }
             while(InStack_Priority(x) >= InComing_Priority(item))
             {
                 exp[i++] = x;
@@ -230,7 +244,10 @@ void InfixToPostfix(struct Stack *stack, char *exp)
             return;
         }
         if(!CheckOperator(prev_item, item))
-            return;
+        {
+             memset(exp, '\0', stack->StackSize * 10);
+             return;
+        }
         prev_item = item;
     }
     Print_post_exp(exp);
