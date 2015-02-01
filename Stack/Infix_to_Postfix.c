@@ -196,7 +196,7 @@ void InfixToPostfix(struct Stack *stack, char *exp)
     while(stack->TOP >= 0)
     {
         item = ReadSymbol();
-        x = (char)Pop(stack);
+        x = Pop(stack);
        // printf("%c\n", x);
 
         if(IsOperand(item))
@@ -214,7 +214,7 @@ void InfixToPostfix(struct Stack *stack, char *exp)
             while(x != '(')
             {
                 exp[i++] = x;
-                x = (char)Pop(stack);
+                x = Pop(stack);
             }
             if(!CheckParen(stack))
             {
@@ -237,7 +237,7 @@ void InfixToPostfix(struct Stack *stack, char *exp)
             while(InStack_Priority(x) >= InComing_Priority(item))
             {
                 exp[i++] = x;
-                x = (char)Pop(stack);
+                x = Pop(stack);
             }
             Push(stack, x);
             Push(stack, item);
