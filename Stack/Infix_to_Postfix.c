@@ -25,6 +25,7 @@ char ReadSymbol(void);
 void Print_post_exp(char *exp);
 bool CheckParen(struct Stack*);
 bool IsOperator(char );
+bool IsOperand(char );
 bool CheckOperator(char, char);
 void HandleError(struct Stack *, char *);
 
@@ -166,14 +167,20 @@ bool CheckOperator(char previous, char current)
     return 1;
 }
 
+bool IsOperand(char c)
+{
+    return (bool)isalnum(c);
+}
+
 void HandleError(struct Stack *stack, char *exp)
 {
     while(getchar() != '\n');
     memset(exp, '\0', stack->StackSize * 10);
     stack->TOP = -1;
-    printf("Wrong expression! Either:\n 1. Some extra arithmetic operators are there or\n");
-    printf(" 2. there may be unmatched parenthesis or\n");
-    printf(" 3. there may be some unexpected symbol.\n");
+    printf("Wrong expression! Either:\n 1. Too many arithmetic operators are there or\n");
+    printf(" 2.Too many operands are there or\n");
+    printf(" 3. Unmatched parenthesis are there or\n");
+    printf(" 4. Some unexpected symbol are there.\n");
 }
 
 
@@ -189,11 +196,16 @@ void InfixToPostfix(struct Stack *stack, char *exp)
     while(stack->TOP >= 0)
     {
         item = ReadSymbol();
-        x = Pop(stack);
+        x = (char)Pop(stack);
        // printf("%c\n", x);
 
-        if(isalnum(item))
+        if(IsOperand(item))
         {
+            if(IsOperand(prev_item))
+            {
+                HandleError(stack, exp);
+                return;
+            }
             Push(stack, x);
             exp[i++] = item;
         }
@@ -202,7 +214,7 @@ void InfixToPostfix(struct Stack *stack, char *exp)
             while(x != '(')
             {
                 exp[i++] = x;
-                x = Pop(stack);
+                x = (char)Pop(stack);
             }
             if(!CheckParen(stack))
             {
@@ -225,7 +237,7 @@ void InfixToPostfix(struct Stack *stack, char *exp)
             while(InStack_Priority(x) >= InComing_Priority(item))
             {
                 exp[i++] = x;
-                x = Pop(stack);
+                x = (char)Pop(stack);
             }
             Push(stack, x);
             Push(stack, item);
@@ -253,4 +265,3 @@ void InfixToPostfix(struct Stack *stack, char *exp)
     }
     Print_post_exp(exp);
 }
-
