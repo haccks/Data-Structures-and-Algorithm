@@ -26,7 +26,7 @@ void Print_post_exp(char *exp);
 bool CheckParen(struct Stack*);
 bool IsOperator(char );
 bool CheckOperator(char, char);
-void HandleError(void);
+void HandleError(struct Stack *, char *);
 
 int main(void)
 {
@@ -137,7 +137,7 @@ bool CheckParen(struct Stack *stack)
     int temp;
     if((temp = getchar()) != '\n' && stack->TOP == -1)
     {
-        HandleError();
+        //HandleError();
         return 0;
     }
     else
@@ -160,15 +160,17 @@ bool CheckOperator(char previous, char current)
 {
     if((IsOperator(previous) && IsOperator(current)) || (current == ')' && IsOperator(previous)))
     {
-        HandleError();
+        //HandleError();
         return 0;
     }
     return 1;
 }
 
-void HandleError(void)
+void HandleError(struct Stack *stack, char *exp)
 {
     while(getchar() != '\n');
+    memset(exp, '\0', stack->StackSize * 10);
+    stack->TOP = -1;
     printf("Wrong expression! Either:\n 1. Some extra arithmetic operators are there or\n");
     printf(" 2. there may be unmatched parenthesis or\n");
     printf(" 3. there may be some unexpected symbol.\n");
@@ -204,7 +206,7 @@ void InfixToPostfix(struct Stack *stack, char *exp)
             }
             if(!CheckParen(stack))
             {
-                memset(exp, '\0', stack->StackSize * 10);
+                HandleError(stack, exp);
                 return;
             }
 
@@ -217,8 +219,7 @@ void InfixToPostfix(struct Stack *stack, char *exp)
         {
             if(InComing_Priority(item) == -1)
             {
-                HandleError();
-                memset(exp, '\0', stack->StackSize * 10);
+                HandleError(stack, exp);
                 return;
             }
             while(InStack_Priority(x) >= InComing_Priority(item))
@@ -245,8 +246,8 @@ void InfixToPostfix(struct Stack *stack, char *exp)
         }
         if(!CheckOperator(prev_item, item))
         {
-             memset(exp, '\0', stack->StackSize * 10);
-             return;
+            HandleError(stack, exp);
+            return;
         }
         prev_item = item;
     }
