@@ -278,11 +278,8 @@ int Operation(char oprtr, int oprnd1, int oprnd2)
 void EvaluatePostfixExp(struct Stack *stack, char *exp)
 {
     Print_post_exp(exp);
-
-    int len = (int)strlen(exp);
     int result = 0;
-    exp[len++] = '#';
-    while(*exp != '#')
+    while(*exp)
     {
 
         if(!IsOperator(*exp))
