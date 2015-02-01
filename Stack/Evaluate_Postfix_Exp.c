@@ -183,7 +183,7 @@ void InfixToPostfix(struct Stack *stack, char *exp)
 {
     memset(exp, '\0', stack->StackSize * 10);
     Push(stack, '(');
-    printf("Enter an infix expression (delimited at the end by the ')' parenthesis:\n");
+    printf("Enter an infix expression delimited at the end by the ')' parenthesis:\n");
 
     int i = 0;
     char x, item, prev_item = '#';
