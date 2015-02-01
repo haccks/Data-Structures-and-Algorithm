@@ -13,7 +13,7 @@
 struct Stack{
     int TOP;
     int StackSize;
-    char S[];
+    char S[];         /* Flexible array member */
 };
 
 void Push(struct Stack *, char );
@@ -133,6 +133,7 @@ void Print_post_exp(char *exp)
     printf("\n\n");
 }
 
+/* Checks if parenthesis is balanced or not. "(a+b))*c" */
 bool CheckParen(struct Stack *stack)
 {
     int temp;
@@ -157,6 +158,7 @@ bool IsOperator(char c)
     }
 }
 
+/*Check if Expression is of the form "a+*b" or "a+b*" */
 bool CheckOperator(char previous, char current)
 {
     if((IsOperator(previous) && IsOperator(current)) || (current == ')' && IsOperator(previous)))
@@ -201,6 +203,7 @@ void InfixToPostfix(struct Stack *stack, char *exp)
 
         if(IsOperand(item))
         {
+            /* Check if two operands are together like "ab+c" */
             if(IsOperand(prev_item))
             {
                 HandleError(stack, exp);
