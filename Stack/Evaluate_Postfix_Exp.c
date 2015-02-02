@@ -61,11 +61,11 @@ int main(void)
                     break;
             case 3: EvaluatePostfixExp(stack, post_exp);
                     break;
-            case 4: exit(0);
+            case 4: free(stack);
+                    exit(0);
             default: printf("Wrong Choice!\n\n");
 		}
     }
-    free(stack);
 }
 
 char ReadSymbol(void)
