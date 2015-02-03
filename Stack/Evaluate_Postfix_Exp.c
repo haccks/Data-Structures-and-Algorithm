@@ -32,7 +32,7 @@ int main(void)
     printf("Enter the size of stack: ");
     scanf("%d", &n);
 
-    struct Stack *stack = malloc(sizeof(struct Stack) + n);
+    struct Stack *stack = malloc(sizeof(struct Stack) + n*sizeof(int));
 
     if(stack == NULL)
         return 0;
