@@ -57,7 +57,7 @@ struct Queue *InitializeQueue(void)
     printf("Enter the size of queue: ");
     scanf("%d", &n);
 
-    struct Queue *Q = malloc(sizeof(struct Queue) + n*sizeof(int));
+    struct Queue *Q = malloc(sizeof(struct Queue) + n);
 
     if(Q == NULL)
     {

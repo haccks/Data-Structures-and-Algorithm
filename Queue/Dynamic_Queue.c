@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 struct Queue{
     int QueueSize;
     int front;
@@ -29,7 +28,6 @@ int main(void)
 {
     int op, item;
     struct Queue *Q = InitializeQueue();
-
 
     while(1)
     {
@@ -88,9 +86,9 @@ struct Queue *InitializeQueue(void)
  ****************************************************************************************/
 void DynamicEnqueue(struct Queue *Q, int item)
 {
-    /// A queue will be full, either when front is 0 and rear is at the end or rear is just
-    /// one less than that of front. Condition "(Q->rear+1) % Q->QueueSize == Q->front" will
-    /// check both possibilities.
+    /// Queue will be full, either when front is 0 and rear is at the end or rear is just
+    /// one less than that of front. Condition "(Q->rear+1) % Q->QueueSize == Q->front"
+    /// will check both possibilities.
     if((Q->rear+1) % Q->QueueSize == Q->front)
     {
         printf("Queue is full. No insertion.\n");
