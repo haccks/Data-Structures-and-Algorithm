@@ -181,13 +181,13 @@ void DeleteEnd_DL(struct Node **list)
 
 	while(temp->RLink != NULL)
 	{
-	    printf("%d\n", temp->data);
+	    //printf("%d\n", temp->data);
 		temp = temp->RLink;
 	}
 
 	if(temp->LLink != NULL)
     {
-        printf("%d\n", (temp->LLink)->data);
+       // printf("%d\n", (temp->LLink)->data);
         (temp->LLink)->RLink = NULL;
 
     }

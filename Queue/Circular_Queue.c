@@ -5,7 +5,8 @@
  * operation will be denied because the insertion pointer (or "rear") reaches the end  *
  * of the queue. This is simply a wastage of memory.                                   *
  *                                                                                     *
- * This problem can be overcome by improving Enqueue or Dequeue functions as follows:  *
+ * This problem can be overcome by improving Enqueue or Dequeue functions or using a   *
+ * circular queue as follows:
  ***************************************************************************************/
 
 #include <stdio.h>
@@ -20,8 +21,8 @@ struct Queue{
 };
 
 struct Queue *InitializeQueue(void);
-void DynamicEnqueue(struct Queue *, int );
-int DynamicDequeue(struct Queue *);
+void CircularEnqueue(struct Queue *, int );
+int CircularDequeue(struct Queue *);
 void PrintQueue(struct Queue *);
 
 int main(void)
@@ -44,9 +45,9 @@ int main(void)
 		{
 		    case 1: printf("Enter an item to be inserted: ");
                     scanf("%d", &item);
-                    DynamicEnqueue(Q, item);
+                    CircularEnqueue(Q, item);
                     break;
-            case 2: item = DynamicDequeue(Q);
+            case 2: item = CircularDequeue(Q);
                     if(item != -1)
                         printf("The deleted item is: %d", item);
                     break;
@@ -84,7 +85,7 @@ struct Queue *InitializeQueue(void)
  * 0 or not; if not, insert the elements so that they are wrapped from the beginning    *
  * and thus make room for a new item.                                                   *
  ****************************************************************************************/
-void DynamicEnqueue(struct Queue *Q, int item)
+void CircularEnqueue(struct Queue *Q, int item)
 {
     /// Queue will be full, either when front is 0 and rear is at the end or rear is just
     /// one less than that of front. Condition "(Q->rear+1) % Q->QueueSize == Q->front"
@@ -103,7 +104,7 @@ void DynamicEnqueue(struct Queue *Q, int item)
     Q->data[Q->rear] = item;
 }
 
-int DynamicDequeue(struct Queue *Q)
+int CircularDequeue(struct Queue *Q)
 {
     int item;
     if(Q->front == -1)
