@@ -135,7 +135,7 @@ int Dequeue(struct Queue *Q)
     }
 
     int item = Q->front->item;
-    struct Node *ptr = Q->front;
+    //struct Node *ptr = Q->front;
 
     Q->data_list = Q->front = Q->front->RLink;
     if(Q->front != NULL)
@@ -145,7 +145,7 @@ int Dequeue(struct Queue *Q)
     ///If there is only node then set rear pointer to NULL.
     else
         Q->rear = Q->rear->RLink;
-    free(ptr);
+    //free(ptr);
     return item;
 }
 
