@@ -22,10 +22,12 @@ struct Tree *InitializeTree(void);
 void build_tree(struct Tree *, int);
 void print_tree(struct Tree *);
 int search(struct Tree *, int, int);
+void insert(struct Tree *, int, int);
+void delete(struct Tree *, int);
 
 int main(void)
 {
-    int op, l, key;
+    int op, l, key, item;
     struct Tree *T = InitializeTree();
 
 
@@ -34,10 +36,12 @@ int main(void)
         printf("\n__________________________________________________________________\n");
         printf("Select an operation:\n");
 		printf("\t1. Build Binary Tree\n");
-		printf("\t2. Default Binary Tree\n");
+		printf("\t2. Default Binary Tree (assumed to be of size 5)\n");
 		printf("\t3. print Tree\n");
 		printf("\t4. Search an item in tree\n");
-		printf("\t5. To exit\n");
+		printf("\t5. Insert a node from tree\n");
+		printf("\t6. Delete a node from tree\n");
+		printf("\t7. To exit\n");
         printf("__________________________________________________________________\n\n");
 		scanf("%d", &op);
 
@@ -60,7 +64,17 @@ int main(void)
                     else
                         printf("%d is found at node %d\n", key, l);
                     break;
-            case 5: free(T);
+            case 5: printf("Enter an item to be inserted: ");
+                    scanf("%d", &item);
+                    printf("Enter a key after which item is inserted: ");
+                     scanf("%d", &key);
+                    insert(T, key, item);
+                    break;
+            case 6: printf("Enter an item of the node to identify node for deletion: ");
+                    scanf("%d", &item);
+                    delete(T, item);
+                    break;
+            case 7: free(T);
                     exit(0);
             default: printf("Wrong Choice!\n\n");
 		}
@@ -131,6 +145,7 @@ void print_tree(struct Tree *T)
         printf("%3d", T->data[i]);
 }
 
+/// Its in fact preorder traversal. Root is processed before visiting any child.
 int search(struct Tree *T, int key, int I)
 {
     if(T->data[I] != key)
@@ -145,6 +160,56 @@ int search(struct Tree *T, int key, int I)
         else
             return -1;
     }
-
     return I;
+}
+
+void insert(struct Tree *T, int key, int item)
+{
+    int l = search(T, key, 0);
+    char opn;
+
+    if(l == 0)
+    {
+        printf("Search is unsuccessful. No insertion\n");
+        return;
+    }
+
+    if(T->data[2*l+1] == -1 || T->data[2*l+2] == -1)
+    {
+        printf("Press L or R to insert in left or right respectively: ");
+        scanf(" %c", &opn);
+
+        if(opn == 'l' || opn == 'L')
+        {
+            if(T->data[2*l+1] == -1)
+                T->data[2*l+1] = item;
+            else
+                printf("Insertion is not possible in left\n");
+        }
+        else if(opn == 'r' || opn == 'R')
+        {
+            if(T->data[2*l+2] == -1)
+                T->data[2*l+2] = item;
+            else
+                printf("Insertion is not possible in right\n");
+        }
+    }
+    else
+        printf("Item can't be inserted as a leaf node\n");
+}
+
+void delete(struct Tree *T, int item)
+{
+    int l = search(T, item, 0);
+
+    if(l == -1)
+    {
+        printf("Node does not exist. No deletion\n");
+        return;
+    }
+
+    if(2*l+1 >= T->size || (T->data[2*l+1] == -1 && T->data[2*l+2] == -1))
+        T->data[l] = -1;
+    else
+        printf("The node containing %d is not a leaf node\n", item);
 }
